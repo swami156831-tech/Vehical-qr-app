@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>🚗 Premium QR Fleet Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(145deg, #0B1120 0%, #19213C 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: #e2e8f0;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .header h1 {
+            font-size: 2.8rem;
+            background: linear-gradient(135deg, #60A5FA, #A78BFA);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .header p {
+            color: #94a3b8;
+            font-size: 1.1rem;
+        }
+        /* Two columns */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        /* Cards */
+        .card {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 2rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-left: 4px solid #3B82F6;
+            padding-left: 1rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #cbd5e1;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            background: #0F172A;
+            border: 1px solid #334155;
+            border-radius: 1rem;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.3);
+        }
+        .photo-upload {
+            border: 2px dashed #334155;
+            border-radius: 1rem;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .photo-upload:hover {
+            border-color: #3B82F6;
+            background: rgba(59,130,246,0.1);
+        }
+        .photo-preview {
+            margin-top: 1rem;
+            text-align: center;
+        }
+        .photo-preview img {
+            max-width: 100px;
+            border-radius: 1rem;
+            border: 2px solid #3B82F6;
+        }
+        button {
+            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            font-size: 1rem;
+            color: white;
+            width: 100%;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+        button:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 20px -5px #3B82F6;
+        }
+        .qr-result {
+            background: #0F172A;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            text-align: center;
+            border: 1px solid #334155;
+        }
+        .qr-code {
+            background: white;
+            padding: 1rem;
+            border-radius: 1rem;
+            display: inline-block;
+            margin: 1rem 0;
+        }
+        .scan-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+        .vehicle-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .vehicle-item {
+            background: #0F172A;
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: 0.2s;
+        }
+        .vehicle-item:hover {
+            background: #1E293B;
+        }
+        .vehicle-info h4 {
+            font-weight: 600;
+        }
+        .vehicle-info p {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+        .btn-icon {
+            background: none;
+            width: auto;
+            padding: 0.5rem;
+            color: #94a3b8;
+        }
+        .btn-icon:hover {
+            transform: none;
+            box-shadow: none;
+            color: #3B82F6;
+        }
+        @media (max-width: 900px) {
+            .dashboard { grid-template-columns: 1fr; }
+            body { padding: 1rem; }
+        }
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: #10B981;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 500;
+            opacity: 0;
+            transition: 0.3s;
+            pointer-events: none;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1><i class="fas fa-qrcode"></i> FleetQR Pro</h1>
+        <p>Intelligent QR stickers for your vehicles — scan, call, track</p>
+    </div>
+
+    <div class="dashboard">
+        <!-- Left: QR Generator -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-plus-circle"></i> Generate New QR</div>
+            <div class="form-group">
+                <label><i class="fas fa-car"></i> Vehicle Number</label>
+                <input type="text" id="vehicleNumber" placeholder="e.g., MH12AB1234" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Owner Name</label>
+                <input type="text" id="ownerName" placeholder="Full name" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-phone-alt"></i> Phone (with country code)</label>
+                <input type="text" id="phoneNumber" placeholder="+919876543210" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-camera"></i> Vehicle Photo (optional)</label>
+                <div class="photo-upload" id="photoUpload">
+                    <i class="fas fa-cloud-upload-alt"></i> Click to upload
+                    <input type="file" id="vehiclePhoto" accept="image/*" style="display:none">
+                </div>
+                <div class="photo-preview" id="photoPreview"></div>
+            </div>
+            <button id="generateBtn"><i class="fas fa-magic"></i> Generate Premium QR</button>
+            <div id="qrResult" style="display:none;" class="qr-result">
+                <h3><i class="fas fa-check-circle" style="color:#10B981"></i> QR Ready</h3>
+                <div id="qrImage" class="qr-code"></div>
+                <div class="scan-stats">
+                    <span><i class="fas fa-download"></i> <a id="downloadLink" style="color:#60A5FA; text-decoration:none">Save PNG</a></span>
+                    <span><i class="fas fa-print"></i> <a onclick="window.print()" style="color:#60A5FA; text-decoration:none; cursor:pointer">Print Sticker</a></span>
+                </div>
+                <p style="font-size:0.8rem; margin-top:0.5rem"><i class="fas fa-shield-alt"></i> Secure & waterproof ready</p>
+            </div>
+        </div>
+
+        <!-- Right: Vehicle Dashboard -->
+        <div class="card">
+            <div class="card-title"><i class="fas fa-list-ul"></i> Active Stickers</div>
+            <div id="vehicleList" class="vehicle-list">
+                <div style="text-align:center; padding:2rem; color:#64748b"><i class="fas fa-spinner fa-pulse"></i> Loading...</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="toast" class="toast">✨ QR generated!</div>
+
+<script>
+    let activeVehicles = [];
+    let currentQrUrl = '';
+    let baseIP = window.location.hostname === 'localhost' ? 'localhost' : window.location.hostname;
+    let photoData = null;
+
+    // Load vehicles from server
+    async function loadVehicles() {
+        try {
+            const res = await fetch(`http://${baseIP}:5000/api/vehicles`);
+            const data = await res.json();
+            activeVehicles = data;
+            renderVehicleList();
+        } catch(e) { console.log('Load error', e); }
+    }
+
+    function renderVehicleList() {
+        const container = document.getElementById('vehicleList');
+        if (!activeVehicles.length) {
+            container.innerHTML = '<div style="text-align:center; padding:2rem; color:#64748b"><i class="fas fa-car-side"></i> No stickers yet. Generate your first!</div>';
+            return;
+        }
+        container.innerHTML = activeVehicles.map(v => `
+            <div class="vehicle-item">
+                <div class="vehicle-info">
+                    <h4>${v.vehicleNumber}</h4>
+                    <p>${v.ownerName} • ${v.phoneNumber}</p>
+                    <small style="color:#475569">Created: ${new Date(v.createdAt).toLocaleDateString()}</small>
+                </div>
+                <button class="btn-icon" onclick="viewQR('${v.qrUrl}')"><i class="fas fa-qrcode"></i></button>
+            </div>
+        `).join('');
+    }
+
+    function viewQR(url) {
+        let finalUrl = url;
+        if (baseIP !== 'localhost') finalUrl = url.replace('localhost', baseIP);
+        const qrImg = `https://quickchart.io/qr?text=${encodeURIComponent(finalUrl)}&size=200&margin=2&dark=3B82F6`;
+        document.getElementById('qrImage').innerHTML = `<img src="${qrImg}" style="width:180px">`;
+        document.getElementById('qrResult').style.display = 'block';
+        currentQrUrl = finalUrl;
+        document.getElementById('downloadLink').href = qrImg;
+        showToast('QR loaded');
+    }
+
+    async function generateQR() {
+        const vehicleNumber = document.getElementById('vehicleNumber').value.trim();
+        const ownerName = document.getElementById('ownerName').value.trim();
+        const phoneNumber = document.getElementById('phoneNumber').value.trim();
+
+        if (!vehicleNumber || !ownerName || !phoneNumber) {
+            alert('Please fill all fields');
+            return;
+        }
+
+        const btn = document.getElementById('generateBtn');
+        btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Generating...';
+        btn.disabled = true;
+
+        try {
+            const payload = { vehicleNumber, ownerName, phoneNumber };
+            if (photoData) payload.photo = photoData;
+
+            const res = await fetch(`http://${baseIP}:5000/api/generate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                let qrUrl = data.qrUrl;
+                if (baseIP !== 'localhost') qrUrl = qrUrl.replace('localhost', baseIP);
+                const qrImage = `https://quickchart.io/qr?text=${encodeURIComponent(qrUrl)}&size=220&margin=2&dark=1E3A8A`;
+                document.getElementById('qrImage').innerHTML = `<img src="${qrImage}" style="width:180px; border-radius:12px">`;
+                document.getElementById('qrResult').style.display = 'block';
+                document.getElementById('downloadLink').href = qrImage;
+                currentQrUrl = qrUrl;
+                showToast('🎉 QR code ready!');
+                // Clear form optional
+                document.getElementById('vehicleNumber').value = '';
+                document.getElementById('ownerName').value = '';
+                document.getElementById('phoneNumber').value = '';
+                document.getElementById('photoPreview').innerHTML = '';
+                photoData = null;
+                loadVehicles(); // refresh list
+            } else {
+                alert('Error: ' + (data.error || 'Unknown'));
+            }
+        } catch (err) {
+            alert('Network error: ' + err.message);
+        } finally {
+            btn.innerHTML = '<i class="fas fa-magic"></i> Generate Premium QR';
+            btn.disabled = false;
+        }
+    }
+
+    function showToast(msg) {
+        const toast = document.getElementById('toast');
+        toast.innerText = msg;
+        toast.style.opacity = 1;
+        setTimeout(() => toast.style.opacity = 0, 2000);
+    }
+
+    // Photo upload
+    document.getElementById('photoUpload').addEventListener('click', () => {
+        document.getElementById('vehiclePhoto').click();
+    });
+    document.getElementById('vehiclePhoto').addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                photoData = ev.target.result;
+                document.getElementById('photoPreview').innerHTML = `<img src="${photoData}" width="80">`;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    document.getElementById('generateBtn').addEventListener('click', generateQR);
+    // initial load
+    loadVehicles();
+    setInterval(loadVehicles, 5000); // auto refresh
+</script>
+</body>
+</html>
